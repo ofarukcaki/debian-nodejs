@@ -1,29 +1,16 @@
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 
-EXPOSE 6901/tcp
-EXPOSE 6901/udp
+ENV CONTAINER_TIMEZONE="Europe/Brussels"
+RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
 
-EXPOSE 5901/tcp
-EXPOSE 5901/udp
+RUN apt update && apt install -y apache2
 
-EXPOSE 8545/tcp
-EXPOSE 8545/udp
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+ENV APACHE_RUN_DIR /var/www/html
 
-EXPOSE 8546/tcp
-EXPOSE 8546/udp
+RUN echo 'Hello, docker' > /var/www/index.html
 
-EXPOSE 30311/tcp
-EXPOSE 30311/udp
-
-EXPOSE 8575/tcp
-EXPOSE 8575/udp
-
-EXPOSE 80/tcp
-EXPOSE 80/udp
-
-EXPOSE 5000/tcp
-EXPOSE 5000/udp
-
-# change tp root
-USER 0 
-CMD tail -f /dev/null
+ENTRYPOINT ["/usr/sbin/apache2"]
+CMD ["-D", "FOREGROUND"]

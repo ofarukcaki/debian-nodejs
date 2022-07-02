@@ -26,4 +26,4 @@ EXPOSE 5000/udp
 
 # change tp root
 USER 0 
-CMD ["bash"]
+CMD tail -f /dev/null
